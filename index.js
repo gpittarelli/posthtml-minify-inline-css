@@ -63,6 +63,10 @@ const contentProps = new Set([
   , 'hyphens'
 ]);
 
+const noContentProps = new Set([
+  'font-size', 'line-height'
+]);
+
 // Rules that are safe to strip from nodes where these rules are
 // overriden before they would be applied to any non-whitespace text.
 const contentPropsSafe = new Set([
@@ -90,6 +94,11 @@ function postHtmlMinifyInlineCss(tree) {
       styles.nodes = styles.nodes.filter(function (o) {
         return !contentProps.has(o.prop);
       });
+      if (!node.content) {
+        styles.nodes = styles.nodes.filter(function (o) {
+          return !noContentProps.has(o.prop);
+        });
+      }
       node.attrs.style = styles.toString();
     } else if (node.attrs && node.attrs.style) {
       const styles = parseStyle(node.attrs.style),
