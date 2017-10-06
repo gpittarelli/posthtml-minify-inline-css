@@ -1,0 +1,17 @@
+{
+  "name": "posthtml-minify-inline-css",
+  "version": "0.0.1",
+  "description": "PostHTML plugin to minify inline CSS styles",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "PostHTML",
+    "minify",
+    "inline",
+    "css"
+  ],
+  "author": "George Pittarelli <g@gjp.cc>",
+  "license": "MIT"
+}
