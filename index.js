@@ -90,16 +90,18 @@ function postHtmlMinifyInlineCss(tree) {
     const text = node.content ? entities.decodeHTML(getText(node)) : '';
 
     if (isWhitespace(text) && node.attrs && node.attrs.style) {
-      const styles = parseStyle(node.attrs.style);
-      styles.nodes = styles.nodes.filter(function (o) {
-        return !contentProps.has(o.prop);
-      });
-      if (!node.content) {
+      if (node.tag.toLowerCase() !== 'img') {
+        const styles = parseStyle(node.attrs.style);
         styles.nodes = styles.nodes.filter(function (o) {
-          return !noContentProps.has(o.prop);
+          return !contentProps.has(o.prop);
         });
+        if (!node.content) {
+          styles.nodes = styles.nodes.filter(function (o) {
+            return !noContentProps.has(o.prop);
+          });
+        }
+        node.attrs.style = styles.toString();
       }
-      node.attrs.style = styles.toString();
     } else if (node.attrs && node.attrs.style) {
       const styles = parseStyle(node.attrs.style),
         props = new Set(styles.nodes.map(property('prop')));
