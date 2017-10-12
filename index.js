@@ -37,7 +37,7 @@ function isPropNeverAppliedToText_(targetProp, tree) {
 // Same as the _ helper version, except don't check the first level
 // for the targetProp style
 function isPropNeverAppliedToText(targetProp, tree) {
-  if (typeof tree === 'string') {
+  if (typeof tree === 'string' || tree.tag === 'img') {
     return false;
   }
   if (!tree.content) {
