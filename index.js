@@ -52,10 +52,21 @@ function getText(tree) {
   }).join('');
 }
 
-function isPropNeverAppliedToText_(targetProp, tree) {
+function isPropNeverAppliedToText_(targetProp, tree, allowWhitespace) {
   if (typeof tree === 'string') {
-    return isWhitespace(tree);
+    return allowWhitespace ? isWhitespace(tree) : false;
   }
+
+  if (tree.tag === 'img') {
+    if (tree.attrs && tree.attrs.style) {
+      const styles = parseStyle(tree.attrs.style).nodes;
+      if (styles.some(function (s) { return s.prop === targetProp; })) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   if (!tree.content) {
     return true;
   }
@@ -74,8 +85,15 @@ function isPropNeverAppliedToText_(targetProp, tree) {
 
 // Same as the _ helper version, except don't check the first level
 // for the targetProp style
-function isPropNeverAppliedToText(targetProp, tree) {
-  if (typeof tree === 'string' || tree.tag === 'img') {
+function isPropNeverAppliedToText(targetProp, tree, allowWhitespace) {
+  if (typeof allowWhitespace === 'undefined') {
+    allowWhitespace = true;
+  }
+
+  if (typeof tree === 'string') {
+    return false;
+  }
+  if (tree.tag === 'img') {
     return false;
   }
   if (!tree.content) {
@@ -83,7 +101,7 @@ function isPropNeverAppliedToText(targetProp, tree) {
   }
 
   return tree.content.every(function (child) {
-    return isPropNeverAppliedToText_(targetProp, child)
+    return isPropNeverAppliedToText_(targetProp, child, allowWhitespace);
   });
 }
 
@@ -109,12 +127,22 @@ function postHtmlMinifyInlineCss(tree) {
         }
         node.attrs.style = styles.toString();
       }
-    } else if (node.attrs && node.attrs.style) {
+    }
+
+    if (node.attrs && node.attrs.style) {
       const styles = parseStyle(node.attrs.style),
         props = new Set(styles.nodes.map(property('prop')));
 
       contentPropsSafe.forEach(function (cp) {
         if (props.has(cp) && isPropNeverAppliedToText(cp, node)) {
+          styles.nodes = styles.nodes.filter(function (o) {
+            return o.prop !== cp;
+          });
+        }
+      });
+
+      contentPropsNoTextSafe.forEach(function (cp) {
+        if (props.has(cp) && isPropNeverAppliedToText(cp, node, false)) {
           styles.nodes = styles.nodes.filter(function (o) {
             return o.prop !== cp;
           });
