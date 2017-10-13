@@ -4,6 +4,44 @@ const parseStyle = require('postcss-safe-parser'),
 const property = p => o => o[p];
 const isWhitespace = s => /^\s*$/.test(s);
 
+// Rules that are safe to strip from nodes with no child text or only
+// whitespace
+const contentProps = new Set([
+  'color'
+  , 'font-family'
+  , 'text-align'
+  , 'font-weight'
+  , 'vertical-align'
+  , 'word-wrap'
+  , '-webkit-hyphens'
+  , '-moz-hyphens'
+  , 'hyphens'
+]);
+
+const noContentProps = new Set([
+  'font-size', 'line-height'
+]);
+
+// Rules that are safe to strip from nodes where these rules are
+// overriden before they would be applied to any non-whitespace text.
+const contentPropsSafe = new Set([
+  'color'
+  , 'font-family'
+  , 'font-weight'
+  , 'vertical-align'
+  , 'word-wrap'
+  , '-webkit-hyphens'
+  , '-moz-hyphens'
+  , 'hyphens'
+]);
+
+// Like contentPropsSafe except will only be removed if never gets
+// applied to any text, whitespace or not
+const contentPropsNoTextSafe = new Set([
+  'text-decoration'
+]);
+
+
 function getText(tree) {
   return (tree.content || []).map(function (child) {
     if (typeof child === 'string') {
@@ -48,37 +86,6 @@ function isPropNeverAppliedToText(targetProp, tree) {
     return isPropNeverAppliedToText_(targetProp, child)
   });
 }
-
-// Rules that are safe to strip from nodes with no child text or only
-// whitespace
-const contentProps = new Set([
-  'color'
-  , 'font-family'
-  , 'text-align'
-  , 'font-weight'
-  , 'vertical-align'
-  , 'word-wrap'
-  , '-webkit-hyphens'
-  , '-moz-hyphens'
-  , 'hyphens'
-]);
-
-const noContentProps = new Set([
-  'font-size', 'line-height'
-]);
-
-// Rules that are safe to strip from nodes where these rules are
-// overriden before they would be applied to any non-whitespace text.
-const contentPropsSafe = new Set([
-  'color'
-  , 'font-family'
-  , 'font-weight'
-  , 'vertical-align'
-  , 'word-wrap'
-  , '-webkit-hyphens'
-  , '-moz-hyphens'
-  , 'hyphens'
-]);
 
 function postHtmlMinifyInlineCss(tree) {
   tree.match({}, function (node) {
