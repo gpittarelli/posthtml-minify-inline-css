@@ -142,6 +142,10 @@ function postHtmlMinifyInlineCss(tree) {
       });
 
       contentPropsNoTextSafe.forEach(function (cp) {
+        if (node.tag === 'a' && cp === 'text-decoration') {
+          return;
+        }
+
         if (props.has(cp) && isPropNeverAppliedToText(cp, node, false)) {
           styles.nodes = styles.nodes.filter(function (o) {
             return o.prop !== cp;
