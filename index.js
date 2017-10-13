@@ -38,7 +38,8 @@ const contentPropsSafe = new Set([
 // Like contentPropsSafe except will only be removed if never gets
 // applied to any text, whitespace or not
 const contentPropsNoTextSafe = new Set([
-  'text-decoration'
+  'text-decoration',
+  'font-size'
 ]);
 
 
