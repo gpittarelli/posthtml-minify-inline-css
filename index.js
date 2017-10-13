@@ -64,7 +64,7 @@ const contentProps = new Set([
 ]);
 
 const noContentProps = new Set([
-  'font-size', 'line-height', 'text-decoration'
+  'font-size', 'line-height'
 ]);
 
 // Rules that are safe to strip from nodes where these rules are
@@ -72,7 +72,6 @@ const noContentProps = new Set([
 const contentPropsSafe = new Set([
   'color'
   , 'font-family'
-  , 'text-decoration'
   , 'font-weight'
   , 'vertical-align'
   , 'word-wrap'
