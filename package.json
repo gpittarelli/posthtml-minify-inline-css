@@ -4,7 +4,9 @@
   "description": "PostHTML plugin to minify inline CSS styles",
   "main": "index.js",
   "scripts": {
-    "test": "rm -rf test/output && ./test.js && diff test/output test/expected"
+    "test": "rm -rf test/output && ./test.js && diff test/output test/expected",
+    "build": "babel index.js > index.es5.js",
+    "prepublish": "npm run build"
   },
   "keywords": [
     "PostHTML",
@@ -15,6 +17,8 @@
   "author": "George Pittarelli <g@gjp.cc>",
   "license": "MIT",
   "devDependencies": {
+    "babel-cli": "6.26.0",
+    "babel-preset-env": "1.6.1",
     "posthtml": "0.9.2"
   },
   "dependencies": {
