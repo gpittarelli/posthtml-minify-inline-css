@@ -2,7 +2,7 @@
   "name": "posthtml-minify-inline-css",
   "version": "0.0.8",
   "description": "PostHTML plugin to minify inline CSS styles",
-  "main": "index.js",
+  "main": "index.es5.js",
   "scripts": {
     "test": "rm -rf test/output && ./test.js && diff test/output test/expected",
     "build": "babel index.js > index.es5.js",
