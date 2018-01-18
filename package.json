@@ -24,5 +24,9 @@
   "dependencies": {
     "entities": "1.1.1",
     "postcss-safe-parser": "3.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gpittarelli/posthtml-minify-inline-css.git"
   }
 }
